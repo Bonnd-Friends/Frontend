@@ -1,9 +1,10 @@
 import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HomePage from './Pages/HomePage';
-import LoginPage from './Pages/LoginPage';
-import RegisterPage from './Pages/RegisterPage'
-import NoPage from './Pages/NoPage';
+import HomePage from './Pages/Website/HomePage';
+import LoginPage from './Pages/Website/LoginPage';
+import RegisterPage from './Pages/Website/RegisterPage'
+import NoPage from './Pages/Website/NoPage';
+import AppPage from './Pages/App/AppPage';
 
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route index element={<HomePage />} />
+          <Route path="app" element={<AppPage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
           <Route path="*" element={<NoPage />} />
