@@ -11,5 +11,9 @@
         --pink_bg: linear-gradient(163deg, rgba(224,173,224,1) 0%, rgba(255,0,197,1) 99%, rgba(229,43,255,1) 100%);
     }
 
+    * {
+        user-select: none;
+      }
+
     /* background: rgb(155,25,219);
     background: linear-gradient(90deg, rgba(155,25,219,1) 0%, rgba(255,0,233,1) 100%); */
