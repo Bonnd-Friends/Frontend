@@ -1,50 +1,123 @@
 import React from 'react';
+import { useState, useRef } from 'react';
 import TinderCard from 'react-tinder-card';
-import image from '../../../public/download.jpeg';
+import image from '../../assets/download.jpeg';
+import flower from '../../assets/flower_9:16.jpg'
+import leaf from '../../assets/leaf_9:16.jpg'
+
+
+const imageData = [{id:"1", imageLink:flower},{id:"2", imageLink:leaf}]
+
+// TODO
+// Use Fetch API from backend
+// Create a stack of tinder cards 
+// Parameters for this component would be {profile, imageData}
+// Try to make the tinderCard a different component
+
 
 const Explore = () => {
+    // The currentIndex is used after we fetch data from backend
+    // Data is in array of objects form example => [{}, {}, {}]
+    const [currentIndex, setCurrentIndex] = useState(0);
+    // This is a ref for the tinderCard
+    const tinderCardRef = useRef(0)
+
     const onSwipe = (direction) => {
         console.log('You swiped: ' + direction);
+        // Call our backend api to store the user opinon (like or dislike )
     };
 
+    // This Function does not have any use but still if we need we can use it later
     const onCardLeftScreen = (myIdentifier) => {
         console.log(myIdentifier + ' left the screen');
     };
 
+    const handleAreaClick = (areaName) => {
+        //console.log(`Clicked on ${areaName}`);
+        if(areaName == "LEFT_AREA"){
+            setCurrentIndex((index)=>{
+                if(index-1<0){
+                    return imageData.length - 1
+                }
+                return index-1
+            })
+        }
+        if(areaName == "RIGHT_AREA"){
+            setCurrentIndex((index)=>{
+                if(index+1>imageData.length - 1){
+                    return 0
+                }
+                return index+1
+            })
+        }
+      };
+
+      // This Function is used when we click Swipe buttons
+      const onSwipeButton = (direction) =>{
+        tinderCardRef.current.swipe(direction)
+      }
+
+
     return (
-        <div className='flex items-center flex-col min-h-screen min-w-screen bg-black overflow-x-hidden overflow-y-hidden'>
+        <>
+        <div className='flex items-center flex-col h-[85vh] min-w-screen bg-black overflow-x-hidden overflow-y-hidden'>
 
             <TinderCard
                 onSwipe={onSwipe}
                 onCardLeftScreen={() => onCardLeftScreen('fooBar')}
                 preventSwipe={['up', 'down']}
-
+                ref={tinderCardRef}
             >
-                <div className='bg-white rounded-lg min-h-screen'>
-                    <div
-                        className='rounded-lg'
-                        style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover', height: '75vh', width: '95vw', position: 'relative' }}
-                    >
-                        <div className='top-[26rem] relative flex justify-between'>
-                            <div className='left-5 relative'>
-                                <h1 className='text-white text-2xl font-semibold'>Hello World</h1>
-                                <h1 className='text-white text-xl'>Hello</h1>
-                            </div>
-                            <div className='right-5 relative top-10'>
-                                <button type='button' className='text-white'>Show More Info</button>
-                            </div>
-                        </div>
+                <div className='bg-orange-500 rounded-lg overflow-hidden p-1'>
 
+                    <map name="workmap">
+                        <area
+                            shape="rect"
+                            coords="0,0,175,616"
+                            alt="LEFT_AREA"
+                            onClick={() => handleAreaClick('LEFT_AREA')}
+                            onTouchStart={() => handleAreaClick('LEFT_AREA')}
+                        />
+                        <area
+                            shape="rect"
+                            coords="175,0,350,616"
+                            alt="RIGHT_AREA"
+                            onClick={() => handleAreaClick('RIGHT_AREA')}
+                            onTouchStart={() => handleAreaClick('RIGHT_AREA')}
+                        />
+                    </map>
+                    <img
+                        src={imageData[currentIndex].imageLink}
+                        alt={`Image ${imageData[currentIndex].id}`}
+                        draggable="false"
+                        height={616}
+                        width={350}
+                        className='object-cover rounded-lg'
+                        useMap="#workmap"
+                    />
+
+
+
+                    <div className='flex justify-between'>
+                        <div className='p-3'>
+                            <h1 className='text-white text-2xl font-semibold'>Hello World</h1>
+                            <h1 className='text-white text-xl'>Hello</h1>
+                        </div>
+                        <div className='right-5 relative top-10 p-3'>
+                            <button type='button' className='text-white'>Show More Info</button>
+                        </div>
                     </div>
 
                 </div>
 
             </TinderCard>
-            <div className='flex justify-evenly items-center gap-5 absolute top-[85vh]'>
-                <button type="button" className="w-2/6 bg-gradient-to-r from-pink-500 to-purple-500 text-white py-2 px-4 rounded-md hover:bg-pink-600 focus:outline-none focus:bg-pink-600 mt-4" onClick={() => onSwipe('left')}>Swipe Left</button>
-                <button type="button" className="w-2/6 bg-gradient-to-r from-pink-500 to-purple-500 text-white py-2 px-4 rounded-md hover:bg-pink-600 focus:outline-none focus:bg-pink-600 mt-4" onClick={() => onSwipe('right')}>Swipe Right</button>
-            </div>
+            
         </div>
+        <div className='flex justify-evenly items-center gap-5 bg-black h-[9vh]'>
+            <button type="button" className="w-2/6 bg-gradient-to-r from-pink-500 to-purple-500 text-white py-2 px-4 rounded-md hover:bg-pink-600 focus:outline-none focus:bg-pink-600 " onClick={() => onSwipeButton('left')}>Swipe Left</button>
+            <button type="button" className="w-2/6 bg-gradient-to-r from-pink-500 to-purple-500 text-white py-2 px-4 rounded-md hover:bg-pink-600 focus:outline-none focus:bg-pink-600 " onClick={() => onSwipeButton('right')}>Swipe Right</button>
+        </div>
+        </>
     );
 };
 
