@@ -21,6 +21,7 @@ const Explore = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     // This is a ref for the tinderCard
     const tinderCardRef = useRef(0)
+    const touchTracker = useRef({x:0, y:0})
 
     const onSwipe = (direction) => {
         console.log('You swiped: ' + direction);
@@ -32,8 +33,13 @@ const Explore = () => {
         console.log(myIdentifier + ' left the screen');
     };
 
-    const handleAreaClick = (areaName) => {
+    const handleAreaClick = (e, areaName) => {
         //console.log(`Clicked on ${areaName}`);
+        const touch = e.changedTouches[0];
+        touchTracker.current.x = touch.clientX
+        touchTracker.current.y = touch.clientY
+        //console.log(touchTracker.current.x, touchTracker.current.y);
+        
         if(areaName == "LEFT_AREA"){
             setCurrentIndex((index)=>{
                 if(index-1<0){
@@ -57,6 +63,18 @@ const Explore = () => {
         tinderCardRef.current.swipe(direction)
       }
 
+      const handleTouchEnd = (e) => {
+        const touch = e.changedTouches[0];
+        if(touchTracker.current.x - touch.clientX > 50){
+            // left
+            onSwipeButton('left')
+        }
+        else if(touchTracker.current.x - touch.clientX < -50){
+            // right
+            onSwipeButton('right')
+        }
+      };
+      
 
     return (
         <>
@@ -76,14 +94,16 @@ const Explore = () => {
                             coords="0,0,175,616"
                             alt="LEFT_AREA"
                             onClick={() => handleAreaClick('LEFT_AREA')}
-                            onTouchStart={() => handleAreaClick('LEFT_AREA')}
+                            onTouchStart={(e) => handleAreaClick(e, 'LEFT_AREA')}
+                            onTouchEnd={handleTouchEnd}
                         />
                         <area
                             shape="rect"
                             coords="175,0,350,616"
                             alt="RIGHT_AREA"
                             onClick={() => handleAreaClick('RIGHT_AREA')}
-                            onTouchStart={() => handleAreaClick('RIGHT_AREA')}
+                            onTouchStart={(e) => handleAreaClick(e, 'RIGHT_AREA')}
+                            onTouchEnd={handleTouchEnd}
                         />
                     </map>
                     <img
@@ -98,7 +118,7 @@ const Explore = () => {
 
 
 
-                    <div className='flex justify-between'>
+                    <div className='flex justify-between absolute top-[500px] w-full'>
                         <div className='p-3'>
                             <h1 className='text-white text-2xl font-semibold'>Hello World</h1>
                             <h1 className='text-white text-xl'>Hello</h1>
