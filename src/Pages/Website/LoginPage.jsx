@@ -1,7 +1,6 @@
-// LoginPage.js
 import React, { useState } from "react";
 import LoginWithEmail from "./LoginWithEmail";
-import LoginWithOTP from "./LoginWithOtp";
+import LoginWithOTP from "./LoginWithOTP";
 
 const LoginPage = () => {
   const [selectedLoginMethod, setSelectedLoginMethod] = useState(null);
