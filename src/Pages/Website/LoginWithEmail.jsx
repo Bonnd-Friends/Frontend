@@ -90,7 +90,7 @@ const LoginPage = () => {
           </button>
         </form>
       ) : (
-        <RegisterPage switchToLogin={switchMode} />
+        <RegisterPage />
       )}
 
       <p className="text-black5 mt-4 text-sm text-center">
