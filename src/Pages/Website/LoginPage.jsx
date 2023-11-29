@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import LoginWithEmail from "./LoginWithEmail";
-import LoginWithOTP from "./LoginWithOTP";
+import OtpVerification from "./OtpVerification";
 
 const LoginPage = () => {
   const [selectedLoginMethod, setSelectedLoginMethod] = useState(null);
@@ -11,6 +11,12 @@ const LoginPage = () => {
 
   const handleEmailLogin = async (email, password) => {
     console.log("Logging in with email/password:", email, password);
+  };
+
+  const handleGetOtp = async (email) => {
+    // Implement logic to send OTP to the provided email
+    console.log("Sending OTP to:", email);
+    setSelectedLoginMethod("otp");
   };
 
   const handleOTPLogin = async (otp) => {
@@ -25,26 +31,25 @@ const LoginPage = () => {
         {selectedLoginMethod === "email" ? (
           <LoginWithEmail onEmailLogin={handleEmailLogin} />
         ) : selectedLoginMethod === "otp" ? (
-          <LoginWithOTP onOTPLogin={handleOTPLogin} />
+          <OtpVerification onGetOtp={handleGetOtp} />
         ) : null}
   
-        {/* Provide buttons to switch between login methods */}
         <div className={`flex flex-col items-center mt-4 ${selectedLoginMethod ? 'hidden' : ''}`}>
           <button
             className={`${
               selectedLoginMethod === "email" ? "bg-gradient-to-r from-pink-500 to-purple-500 text-white text-lg" : "bg-gradient-to-r from-pink-500 to-purple-500 text-white text-lg"
-            } w-80 py-2 rounded-md mb-4`}
+            } w-60 py-2 rounded-md mb-4`}
             onClick={() => handleLoginMethodChange("email")}
           >
-            Login with Email/Password
+            Email
           </button>
           <button
             className={`${
               selectedLoginMethod === "otp" ? "bg-gradient-to-r from-pink-500 to-purple-500 text-white text-lg" : "bg-gradient-to-r from-pink-500 to-purple-500 text-white text-lg"
-            } w-80 py-2 rounded-md`}
+            } w-60 py-2 rounded-md`}
             onClick={() => handleLoginMethodChange("otp")}
           >
-            Login with OTP
+            OTP
           </button>
         </div>
       </div>

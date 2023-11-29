@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const RegisterPage = ({ switchToLogin }) => {
+const RegisterPage = () => {
   const navigateTo = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mobile, setMobile] = useState("");
+
+  function switchToLogin(){
+    navigateTo("/login")
+  }
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -20,7 +24,7 @@ const RegisterPage = ({ switchToLogin }) => {
         body: JSON.stringify({ email, password, mobile }),
       });
 
-      if (!response.ok) {
+      if (response.ok) {
         console.log("Signup successful!");
         // Redirect to the login page after successful signup
         navigateTo("/login");
