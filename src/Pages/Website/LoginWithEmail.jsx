@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RegisterPage from "./RegisterPage";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const navigateTo = useNavigate();
@@ -41,6 +42,14 @@ const LoginPage = () => {
   };
 
   return (
+    <div className="container">
+      <button
+      className="bg-black3 text-white py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
+    >
+      <Link to="/" className="text-white hover:text-gray-300">
+        Back
+      </Link>
+    </button>
     <div className="max-w-md w-full p-6 bg-black2 rounded-md shadow-md min-h-0 h-auto">
       <h2 className="flex justify-center text-2xl font-semibold text-white mb-6">
         {isLoginMode ? "Login" : "Sign Up"}
@@ -103,6 +112,7 @@ const LoginPage = () => {
           {isLoginMode ? "Sign Up" : "Login"}
         </button>
       </p>
+    </div>
     </div>
   );
 };

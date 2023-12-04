@@ -11,7 +11,7 @@ const AppNavBar = () => {
     }
     return (
         <Tabs.Root
-            className="flex flex-col shadow-[0_2px_10px] shadow-blackA2 min-w-full"
+            className="flex flex-col shadow-[0_2px_10px] shadow-blackA2 min-w-full h-1/6"
             defaultValue={navTab}
         >
             <Tabs.List className="shrink-0 flex border-b border-mauve6" aria-label="Manage your account">

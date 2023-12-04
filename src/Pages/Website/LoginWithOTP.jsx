@@ -51,7 +51,6 @@ const LoginWithOTP = ({ email }) => {
           Enter OTP
         </label>
       </div>
-
       <div className="flex justify-center">
         {otp.map((digit, index) => (
           <input

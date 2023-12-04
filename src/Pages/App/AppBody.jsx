@@ -1,20 +1,21 @@
 import React from 'react'
 import { useGlobalContext } from '../../context'
-import Profile from '../../Components/App/Profile'
 
-// import Explore from '../../Components/App/Explore'
+import Explore from '../../Components/App/Explore'
+import Matches from '../../Components/App/Matches'
+import Profile from '../../Components/App/Profile';
 
 const AppBody = () => {
   const {navTab} = useGlobalContext()
 
-  // if(navTab == "Explore"){
-  //   return <Explore />
-  // }
+  if(navTab == "Explore"){
+    return <Explore />
+  }
   if(navTab == "Profile"){
-    return <Profile/>
+    return <div><Profile/></div>
   }
   if(navTab == "Matches"){
-    return <div>Matches</div>
+    return <Matches />
   }
 }
 

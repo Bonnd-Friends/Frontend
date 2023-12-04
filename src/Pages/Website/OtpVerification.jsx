@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import LoginWithOTP from "./LoginWithOTP";
+import {Link} from 'react-router-dom'
 
 const OtpVerification = () => {
   const [email, setEmail] = useState("");
@@ -13,7 +14,13 @@ const OtpVerification = () => {
 
   return (
     <div className="max-w-md w-full p-6 bg-black2 rounded-md shadow-md min-h-0 h-auto">
-    
+    <button
+      className="bg-black3 text-white py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
+    >
+      <Link to="/" className="text-white hover:text-gray-300">
+        Back
+      </Link>
+    </button>
       {showLoginWithOtp ? (
         <LoginWithOTP/>
       ) : (

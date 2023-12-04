@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
   content: [
     "./index.html",
@@ -13,6 +14,7 @@ export default {
         black4: 'var(--black4)',
         black5: 'var(--black5)',
         black6: 'var(--black6)',
+        black7: 'var(--black7)',
         white: 'var(--white)',
         background: 'var(--background)',
         pink_bg: 'var(--pink_bg)',

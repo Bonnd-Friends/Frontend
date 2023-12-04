@@ -1,15 +1,21 @@
     :root{
         --black1: #121212;
-        --black2: #282828;
+        --black2: #212121;
         --black3: #3f3f3f;
+        --black7:#3D3A3A;
         --black4: #5e5a66;
         --black5: #76737e;
         --black6: #908d96;
+      
 
         --white:#ffffff;
         --background: rgb(224,173,224);
         --pink_bg: linear-gradient(163deg, rgba(224,173,224,1) 0%, rgba(255,0,197,1) 99%, rgba(229,43,255,1) 100%);
     }
+
+    * {
+        user-select: none;
+      }
 
     /* background: rgb(155,25,219);
     background: linear-gradient(90deg, rgba(155,25,219,1) 0%, rgba(255,0,233,1) 100%); */
