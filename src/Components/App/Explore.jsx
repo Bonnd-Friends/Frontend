@@ -2,8 +2,8 @@ import React from 'react';
 import { useState, useRef } from 'react';
 import TinderCard from 'react-tinder-card';
 import image from '../../assets/download.jpeg';
-import flower from '../../assets/flower_9:16.jpg'
-import leaf from '../../assets/leaf_9:16.jpg'
+import flower from '../../assets/flower.jpg'
+import leaf from '../../assets/leaf.jpg'
 
 
 const imageData = [{id:"1", imageLink:flower},{id:"2", imageLink:leaf}]
