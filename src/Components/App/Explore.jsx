@@ -74,6 +74,11 @@ const Explore = () => {
             onSwipeButton('right')
         }
       };
+
+
+      const handleTouchMove = (direction) => {
+        tinderCardRef.current.swipe(direction)
+      }
       
 
     return (
@@ -95,6 +100,7 @@ const Explore = () => {
                             alt="LEFT_AREA"
                             onClick={() => handleAreaClick('LEFT_AREA')}
                             onTouchStart={(e) => handleAreaClick(e, 'LEFT_AREA')}
+                            // onTouchMove={()=>handleTouchMove('right')}
                             onTouchEnd={handleTouchEnd}
                         />
                         <area
@@ -103,6 +109,7 @@ const Explore = () => {
                             alt="RIGHT_AREA"
                             onClick={() => handleAreaClick('RIGHT_AREA')}
                             onTouchStart={(e) => handleAreaClick(e, 'RIGHT_AREA')}
+                            // onTouchMove={()=>handleTouchMove('left')}
                             onTouchEnd={handleTouchEnd}
                         />
                     </map>
