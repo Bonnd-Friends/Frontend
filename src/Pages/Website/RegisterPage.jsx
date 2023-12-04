@@ -36,9 +36,6 @@ const RegisterPage = () => {
     }
   };
 
-  const switchToLogin =()=>{
-    navigateTo("/login");
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black1">
