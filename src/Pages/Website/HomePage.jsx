@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
@@ -7,10 +8,8 @@ const Navbar = () => {
         <div className="text-white text-xl font-semibold">App</div>
         {/* Add your navigation links here */}
         <div className="space-x-4">
-          <a href="#" className="text-white hover:text-gray-300">Home</a>
-          <a href="#" className="text-white hover:text-gray-300">About</a>
-          <a href="#" className="text-white hover:text-gray-300">Contact</a>
-          <a href="#" className="text-white hover:text-gray-300">Login</a>
+          <Link to="/app" className="text-white hover:text-gray-300">App</Link>
+          <Link to="/login" className="text-white hover:text-gray-300">Login</Link>
         </div>
       </div>
     </nav>
