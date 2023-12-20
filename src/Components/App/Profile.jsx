@@ -1,7 +1,5 @@
 import React from "react";
 import logo from "../../assets/download.jpeg";
-import { Link } from "react-router-dom";
-import HomePage from '../../Pages/Website/HomePage';
 import {
   FaMobile,
   FaEnvelope,
@@ -17,13 +15,7 @@ import {
 const Profile = () => (
 
   <div className="max-w-md mx-auto p-6 bg-black1 rounded-md shadow-md text-white">
-    <button
-      className="bg-black3 text-white py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
-    >
-      <Link to="/" className="text-white hover:text-gray-300">
-        Back
-      </Link>
-    </button>
+    
     <div className="flex items-center justify-center mb-4">
       <img
         className="h-[200px] w-[200px] object-cover rounded-full border-4 border-white shadow-lg"
@@ -32,7 +24,7 @@ const Profile = () => (
       />
     </div>
     <div className="flex items-center justify-center text-4xl font-semibold mb-4">
-      John Doe
+      Bot
     </div>
     <div className="flex items-center justify-center">
       <div className="bg-black2 p-2 rounded-[0.5rem] text-black6 shadow-md inline-block mx-auto">

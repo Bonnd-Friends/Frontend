@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import LoginWithEmail from "./LoginWithEmail";
 import OtpVerification from "./OtpVerification";
+import {FaUser} from 'react-icons/fa';
 
 const LoginPage = () => {
   const [selectedLoginMethod, setSelectedLoginMethod] = useState(null);
@@ -25,9 +26,9 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black1">
-      <div className="max-w-md w-full p-6 bg-black2 rounded-md shadow-md">
-  
+    <div className="min-h-screen flex items-center justify-center bg-black1 ">
+      <div className="max-w-md w-auto rounded-[20px] p-6 bg-black2 flex flex-col items-center justify-center rounded-md shadow-lg">
+        <FaUser className="h-[100px] w-[100px] text-black6 mb-[30px]"/>
         {selectedLoginMethod === "email" ? (
           <LoginWithEmail onEmailLogin={handleEmailLogin} />
         ) : selectedLoginMethod === "otp" ? (
