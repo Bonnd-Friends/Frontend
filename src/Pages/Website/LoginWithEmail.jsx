@@ -1,34 +1,45 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RegisterPage from "./RegisterPage";
+import { Link } from "react-router-dom";
+
+import AlertBox from "./AlertBox";
 
 const LoginPage = () => {
   const navigateTo = useNavigate();
 
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoginMode, setIsLoginMode] = useState(true);
+  const [modal, setModal] = useState(false);
+  const [modalData, setModalData] = useState({})
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("login-api-endpoint", {
+      const response = await fetch("https://amazing-nice-sunspot.glitch.me/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username:username, password:password }),
       });
 
       if (response.ok) {
         console.log("Login successful!");
+        setModalData({title:"Login Successfully", description:`Welcome ${username} you are successfully login`, button:'Okay'})
+        setModal(true)
       } else {
         // Handle login error
         console.error("Login failed");
+        setModalData({title:"Login Failed", description:`Please check your credentials`, button:'Okay'})
+        setModal(true)
       }
     } catch (error) {
       console.error("Error during login:", error);
+      setModalData({title:"Error during login", description:'Please check the credentials properly and check your internet connection', button:'Okay'})
+      setModal(true)
     }
   };
 
@@ -41,6 +52,19 @@ const LoginPage = () => {
   };
 
   return (
+
+    <div className="container">
+      <button
+      className="bg-black3 text-white py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
+    >
+      <Link to="/" className="text-white hover:text-gray-300">
+        Back
+      </Link>
+    </button>
+
+    <>
+    <AlertBox open={modal} setOpen={setModal} data={modalData}/>
+
     <div className="max-w-md w-full p-6 bg-black2 rounded-md shadow-md min-h-0 h-auto">
       <h2 className="flex justify-center text-2xl font-semibold text-white mb-6">
         {isLoginMode ? "Login" : "Sign Up"}
@@ -50,18 +74,17 @@ const LoginPage = () => {
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label
-              htmlFor="email"
               className="block text-black6 text-sm font-bold mb-2"
             >
-              Email Address
+              Username
             </label>
             <input
-              type="email"
-              id="email"
-              name="email"
+              type="text"
+              id="username"
+              name="username"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
               required
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
 
@@ -104,6 +127,9 @@ const LoginPage = () => {
         </button>
       </p>
     </div>
+    </>
+    </div>
+
   );
 };
 

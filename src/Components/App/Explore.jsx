@@ -2,8 +2,8 @@ import React from 'react';
 import { useState, useRef } from 'react';
 import TinderCard from 'react-tinder-card';
 import image from '../../assets/download.jpeg';
-import flower from '../../assets/flower_9:16.jpg'
-import leaf from '../../assets/leaf_9:16.jpg'
+import flower from '../../assets/flower.jpg'
+import leaf from '../../assets/leaf.jpg'
 
 
 const imageData = [{id:"1", imageLink:flower},{id:"2", imageLink:leaf}]
@@ -74,11 +74,16 @@ const Explore = () => {
             onSwipeButton('right')
         }
       };
+
+
+      const handleTouchMove = (direction) => {
+        tinderCardRef.current.swipe(direction)
+      }
       
 
     return (
         <>
-        <div className='flex items-center flex-col h-[85vh] min-w-screen bg-black overflow-x-hidden overflow-y-hidden'>
+        <div className='flex items-center flex-col h-full min-w-screen p-5 bg-black1 overflow-x-hidden overflow-y-hidden'>
 
             <TinderCard
                 onSwipe={onSwipe}
@@ -86,7 +91,7 @@ const Explore = () => {
                 preventSwipe={['up', 'down']}
                 ref={tinderCardRef}
             >
-                <div className='bg-orange-500 rounded-lg overflow-hidden p-1'>
+                <div className='bg-white-500 rounded-lg overflow-hidden p-1'>
 
                     <map name="workmap">
                         <area
@@ -95,6 +100,7 @@ const Explore = () => {
                             alt="LEFT_AREA"
                             onClick={() => handleAreaClick('LEFT_AREA')}
                             onTouchStart={(e) => handleAreaClick(e, 'LEFT_AREA')}
+                            // onTouchMove={()=>handleTouchMove('right')}
                             onTouchEnd={handleTouchEnd}
                         />
                         <area
@@ -103,6 +109,7 @@ const Explore = () => {
                             alt="RIGHT_AREA"
                             onClick={() => handleAreaClick('RIGHT_AREA')}
                             onTouchStart={(e) => handleAreaClick(e, 'RIGHT_AREA')}
+                            // onTouchMove={()=>handleTouchMove('left')}
                             onTouchEnd={handleTouchEnd}
                         />
                     </map>

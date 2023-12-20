@@ -1,14 +1,14 @@
 import React, { useState, useRef } from "react";
 
-const LoginWithOTP = () => {
+const LoginWithOTP = ({ email }) => {
   const [otp, setOTP] = useState(["", "", "", ""]);
   const inputRefs = [useRef(), useRef(), useRef(), useRef()];
 
   const handleInputChange = (index, value) => {
     const newOTP = [...otp];
-    newOTP[index] = value;
+    newOTP[index] = value || "";
     setOTP(newOTP);
-
+  
     if (value && index < inputRefs.length - 1) {
       inputRefs[index + 1].current.focus();
     }
@@ -16,7 +16,15 @@ const LoginWithOTP = () => {
 
   const handleBackspace = (index, value) => {
     if (!value && index > 0) {
+      const newOTP = [...otp];
+      newOTP[index - 1] = "";
+      setOTP(newOTP);
       inputRefs[index - 1].current.focus();
+    }else{
+        const newOTP = [...otp];
+        newOTP[index] = "";
+        setOTP(newOTP);
+        inputRefs[index].current.focus();
     }
   };
 
@@ -29,7 +37,11 @@ const LoginWithOTP = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    // login with OTP Integration
+    console.log("Logging in with OTP:", otp);
+  };
+
+  const handleResendOtp = () => {
+    console.log("Resending OTP...");
   };
 
   return (
@@ -39,7 +51,6 @@ const LoginWithOTP = () => {
           Enter OTP
         </label>
       </div>
-
       <div className="flex justify-center">
         {otp.map((digit, index) => (
           <input
@@ -61,8 +72,19 @@ const LoginWithOTP = () => {
         type="submit"
         className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-2 px-4 rounded-md hover:bg-pink-600 focus:outline-none focus:bg-pink-600 mt-4"
       >
-        Login with OTP
+        Verify OTP
       </button>
+
+      <p className="text-black5 mt-4 text-sm text-center">
+        Didn't receive OTP?{" "}
+        <button
+          type="button"
+          className="text-blue-500"
+          onClick={handleResendOtp}
+        >
+          Resend OTP
+        </button>
+      </p>
     </form>
   );
 };

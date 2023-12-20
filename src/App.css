@@ -1,10 +1,12 @@
     :root{
         --black1: #121212;
-        --black2: #282828;
+        --black2: #212121;
         --black3: #3f3f3f;
+        --black7:#3D3A3A;
         --black4: #5e5a66;
         --black5: #76737e;
         --black6: #908d96;
+      
 
         --white:#ffffff;
         --background: rgb(224,173,224);
