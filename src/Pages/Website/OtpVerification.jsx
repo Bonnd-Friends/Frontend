@@ -1,18 +1,47 @@
 import React, { useState } from "react";
 import LoginWithOTP from "./LoginWithOTP";
 import {Link} from 'react-router-dom'
+import AlertBox from "./AlertBox";
 
 const OtpVerification = () => {
   const [email, setEmail] = useState("");
   const [showLoginWithOtp, setShowLoginWithOtp] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [modalData, setModalData] = useState({})
 
   const handleGetOtp = async (e) => {
     e.preventDefault();
     console.log("Getting OTP for email:", email);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_ENVIRONMENT=="PRODUCTION"?'/api':import.meta.env.VITE_BACKEND_URL}/auth/generate-otp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email:email }),
+      });
+
+      if (response.ok) {
+        console.log("Login successful!");
+        setModalData({title:"Email Sent Successfully", description:`Email sent to ${email} Please check your email`, button:'Okay'})
+        setModal(true)
+      } else {
+        // Handle login error
+        console.error("Login failed");
+        setModalData({title:"Email Sent Failed", description:`Please check your credentials`, button:'Okay'})
+        setModal(true)
+      }
+    } catch (error) {
+      console.error("Error during sending email:", error);
+      setModalData({title:"Error during sending email", description:'Please check the credentials properly and check your internet connection', button:'Okay'})
+      setModal(true)
+    }
     setShowLoginWithOtp(true);
   };
 
   return (
+    <>
+    <AlertBox open={modal} setOpen={setModal} data={modalData}/>
     <div className="max-w-md w-full p-6 bg-black2 rounded-md shadow-md min-h-0 h-auto">
     <button
       className="bg-black3 text-white py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
@@ -22,7 +51,7 @@ const OtpVerification = () => {
       </Link>
     </button>
       {showLoginWithOtp ? (
-        <LoginWithOTP/>
+        <LoginWithOTP email={email}/>
       ) : (
         <>
         <h2 className="flex justify-center text-2xl font-semibold text-white mb-6">
@@ -56,6 +85,7 @@ const OtpVerification = () => {
         </>
       )}
     </div>
+    </>
   );
 };
 
