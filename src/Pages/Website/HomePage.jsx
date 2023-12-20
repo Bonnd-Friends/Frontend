@@ -12,6 +12,7 @@ const Navbar = () => {
           <img src={logo} className="h-[30px] w-[100px]" alt="Logo"></img>
         </div>
         <div className="space-x-4">
+
           <Link to="/" className="text-white hover:text-gray-300">
             Home
           </Link>
@@ -19,6 +20,7 @@ const Navbar = () => {
             <FaSignInAlt className="inline-block text-lg mr-1" />
             Login
           </Link>
+          <Link to="/app" className="text-white hover:text-gray-300">App</Link>
         </div>
       </div>
     </nav>
