@@ -83,7 +83,7 @@ const Explore = () => {
 
     return (
         <>
-        <div className='flex items-center flex-col h-full min-w-screen p-5 bg-black1 overflow-x-hidden overflow-y-hidden'>
+        <div className='flex items-center flex-col h-[85vh] min-w-screen pt-5 bg-black1 overflow-x-hidden overflow-y-hidden'>
 
             <TinderCard
                 onSwipe={onSwipe}

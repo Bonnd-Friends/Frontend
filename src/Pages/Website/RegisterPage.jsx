@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import * as AlertDialog from '@radix-ui/react-alert-dialog';
 
 import AlertBox from "./AlertBox";
 
@@ -20,7 +19,7 @@ const RegisterPage = () => {
 
     if (password == confirmPassword) {
       try {
-        const response = await fetch("https://amazing-nice-sunspot.glitch.me/auth/register", {
+        const response = await fetch(`${import.meta.env.VITE_ENVIRONMENT=="PRODUCTION"?'/api':import.meta.env.VITE_BACKEND_URL}/auth/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -28,20 +27,22 @@ const RegisterPage = () => {
           body: JSON.stringify({ email:email, password:password, username:username, confirmPassword:confirmPassword }),
         });
 
-        if (!response.ok) {
+        if (response.ok) {
           setModalData({title:"Registered Successfully", description:`Welcome ${username} you are successfully registered`, button:'Login'})
           setModal(true)
           // Redirect to the login page after successful signup
-          navigateTo("/login");
+          navigateTo("/app");
         } else {
           console.error("Signup failed");
           setModalData({title:"Signup failed", description:'Please Choose a different username for register', button:'Register'})
           setModal(true)
+          navigateTo("/login");
         }
       } catch (error) {
         console.error("Error during signup:", error);
         setModalData({title:"Error during signup", description:'Please check the credentials properly and check your internet connection', button:'Okay'})
         setModal(true)
+        navigateTo("/login");
       }
     }
     else {

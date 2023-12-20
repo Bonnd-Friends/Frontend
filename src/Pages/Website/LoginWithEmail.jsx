@@ -8,7 +8,7 @@ import AlertBox from "./AlertBox";
 const LoginPage = () => {
   const navigateTo = useNavigate();
 
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [modal, setModal] = useState(false);
@@ -18,28 +18,31 @@ const LoginPage = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://amazing-nice-sunspot.glitch.me/auth/login", {
+      const response = await fetch(`${import.meta.env.VITE_ENVIRONMENT=="PRODUCTION"?'/api':import.meta.env.VITE_BACKEND_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username:username, password:password }),
+        body: JSON.stringify({ email:email, password:password }),
       });
 
       if (response.ok) {
         console.log("Login successful!");
-        setModalData({title:"Login Successfully", description:`Welcome ${username} you are successfully login`, button:'Okay'})
+        setModalData({title:"Login Successfully", description:`Welcome ${email} you are successfully login`, button:'Okay'})
         setModal(true)
+        navigateTo('/app')
       } else {
         // Handle login error
         console.error("Login failed");
         setModalData({title:"Login Failed", description:`Please check your credentials`, button:'Okay'})
         setModal(true)
+        navigateTo('/login')
       }
     } catch (error) {
       console.error("Error during login:", error);
       setModalData({title:"Error during login", description:'Please check the credentials properly and check your internet connection', button:'Okay'})
       setModal(true)
+      navigateTo('/login')
     }
   };
 
@@ -76,15 +79,15 @@ const LoginPage = () => {
             <label
               className="block text-black6 text-sm font-bold mb-2"
             >
-              Username
+              Email
             </label>
             <input
               type="text"
-              id="username"
-              name="username"
+              id="email"
+              name="email"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
               required
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 

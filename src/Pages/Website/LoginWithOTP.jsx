@@ -1,8 +1,14 @@
 import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import AlertBox from "./AlertBox";
 
 const LoginWithOTP = ({ email }) => {
+  const navigateTo = useNavigate();
+
   const [otp, setOTP] = useState(["", "", "", ""]);
   const inputRefs = [useRef(), useRef(), useRef(), useRef()];
+  const [modal, setModal] = useState(false);
+  const [modalData, setModalData] = useState({})
 
   const handleInputChange = (index, value) => {
     const newOTP = [...otp];
@@ -35,16 +41,83 @@ const LoginWithOTP = ({ email }) => {
     }
   };
 
+  const convertOtpToNumber = (otp) => {
+    let multi = 1
+    let new_otp = 0
+    for(let i=otp.length-1;i>=0;i--){
+      new_otp = new_otp+otp[i]*multi
+      multi = multi*10
+
+    }
+    return new_otp
+  }
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Logging in with OTP:", otp);
+    const numberOtp = convertOtpToNumber(otp)
+    console.log("OTP" + numberOtp)
+    try {
+      const response = await fetch(`${import.meta.env.VITE_ENVIRONMENT=="PRODUCTION"?'/api':import.meta.env.VITE_BACKEND_URL}/auth/verify-otp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email:email, otp:numberOtp }),
+      });
+
+      if (response.ok) {
+        console.log("Login successful!");
+        setModalData({title:"Login Successfully", description:`Welcome ${email} you are successfully login`, button:'Okay'})
+        setModal(true)
+        navigateTo('/app')
+      } else {
+        // Handle login error
+        console.error("Login failed");
+        setModalData({title:"Login Failed", description:`Please check your credentials`, button:'Okay'})
+        setModal(true)
+        navigateTo('/login')
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      setModalData({title:"Error during login", description:'Please check the credentials properly and check your internet connection', button:'Okay'})
+      setModal(true)
+      navigateTo('/login')
+    }
   };
 
-  const handleResendOtp = () => {
+  const handleResendOtp = async (e) => {
     console.log("Resending OTP...");
+    e.preventDefault();
+    console.log("Getting OTP for email:", email);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_ENVIRONMENT=="PRODUCTION"?'/api':import.meta.env.VITE_BACKEND_URL}/auth/generate-otp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email:email }),
+      });
+
+      if (response.ok) {
+        console.log("OTP Sent successful!");
+        setModalData({title:"OTP Sent Successfully", description:`OTP sent to ${email} Please check your email`, button:'Okay'})
+        setModal(true)
+      } else {
+        // Handle login error
+        console.error("OTP Sent failed");
+        setModalData({title:"OTP Sent Failed", description:`Please check your credentials`, button:'Okay'})
+        setModal(true)
+      }
+    } catch (error) {
+      console.error("Error during sending OTP:", error);
+      setModalData({title:"Error during sending OTP", description:'Please check the credentials properly and check your internet connection', button:'Okay'})
+      setModal(true)
+    }
   };
 
   return (
+    <>
+    <AlertBox open={modal} setOpen={setModal} data={modalData}/>
     <form onSubmit={handleLogin}>
       <div className="mb-4 text-white text-center">
         <label htmlFor="otp" className="block text-lg font-bold mb-4">
@@ -86,6 +159,7 @@ const LoginWithOTP = ({ email }) => {
         </button>
       </p>
     </form>
+    </>
   );
 };
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import logo from "../../assets/download.jpeg";
 import {
   FaMobile,
@@ -12,7 +13,24 @@ import {
   FaUser,
 } from "react-icons/fa";
 
-const Profile = () => (
+const Profile = () => {
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    // Fetch user data from your API
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_ENVIRONMENT == "PRODUCTION" ? '/api' : import.meta.env.VITE_BACKEND_URL}/profile`);
+        const data = await response.json();
+        setUserData(data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []); 
+  return(
 
   <div className="max-w-md mx-auto p-6 bg-black1 rounded-md shadow-md text-white">
     
@@ -24,11 +42,11 @@ const Profile = () => (
       />
     </div>
     <div className="flex items-center justify-center text-4xl font-semibold mb-4">
-      Bot
+      {userData.name}
     </div>
     <div className="flex items-center justify-center">
       <div className="bg-black2 p-2 rounded-[0.5rem] text-black6 shadow-md inline-block mx-auto">
-        Passionate💖
+        {userData.insta_id}
       </div>
     </div>
     <div className="flex items-center justify-center p-3">
@@ -49,28 +67,28 @@ const Profile = () => (
       <div className="flex items-center mb-2">
         <FaMobile className="text-2xl mr-2 text-blue-500" />
         <div>
-          <p className="text-black6">Mobile No</p> +1234567890
+          <p className="text-black6">Mobile No</p> {userData.phone_number}
         </div>
       </div>
       <hr className="border-gray-600 my-2" />
       <div className="flex items-center mb-2">
         <FaEnvelope className="text-2xl mr-2 text-green-500" />
         <div>
-          <p className="text-black6">Email</p> xyz@example.com
+          <p className="text-black6">Email</p> {userData.email}
         </div>
       </div>
       <hr className="border-gray-600 my-2" />
       <div className="flex items-center mb-2">
         <FaMapMarkerAlt className="text-2xl mr-2 text-yellow-500" />
         <div>
-          <p className="text-black6">Location</p> Nagpur
+          <p className="text-black6">Location</p> {userData.location}
         </div>
       </div>
       <hr className="border-gray-600 my-2" />
       <div className="flex items-center">
         <FaBirthdayCake className="text-2xl mr-2 text-pink-500" />
         <div>
-          <p className="text-black6">Date of Birth</p> 01/01/2001
+          <p className="text-black6">Date of Birth</p> {userData.dob}
         </div>
       </div>
     </div>
@@ -78,33 +96,15 @@ const Profile = () => (
     <div className="mb-2">
       <div className="text-4xl font-medium mb-2 ">About Me</div>
       <div className="text-black6">
-        I'm Creative Director and UI/UX Designer from Sydney, Australia, working
-        in web development and print media. I enjoy turning complex problems
-        into simple, beautiful and intuitive designs. My aim is to bring across
-        your message and identity in the most creative way. I created web design
-        for many famous brand companies.
+        {userData.description}
       </div>
     </div>
   </div>
 );
+  }
 
 export default Profile;
 
 
-// const [userData, setUserData] = useState(null);
 
-//   useEffect(() => {
-//     // Fetch user data from your API
-//     const fetchUserData = async () => {
-//       try {
-//         const response = await fetch("your-api-endpoint");
-//         const data = await response.json();
-//         setUserData(data);
-//       } catch (error) {
-//         console.error("Error fetching user data:", error);
-//       }
-//     };
-
-//     fetchUserData();
-//   }, []); 
 
