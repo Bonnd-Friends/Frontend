@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import AlertBox from "./AlertBox";
+import AlertBox from "./AlertBox";
 
 const LoginWithOTP = ({ email }) => {
   const navigateTo = useNavigate();

@@ -22,18 +22,18 @@ const OtpVerification = () => {
       });
 
       if (response.ok) {
-        console.log("OTP Sent successful!");
-        setModalData({title:"OTP Sent Successfully", description:`OTP sent to ${email} Please check your email`, button:'Okay'})
+        console.log("Login successful!");
+        setModalData({title:"Email Sent Successfully", description:`Email sent to ${email} Please check your email`, button:'Okay'})
         setModal(true)
       } else {
         // Handle login error
-        console.error("OTP Sent failed");
-        setModalData({title:"OTP Sent Failed", description:`Please check your credentials`, button:'Okay'})
+        console.error("Login failed");
+        setModalData({title:"Email Sent Failed", description:`Please check your credentials`, button:'Okay'})
         setModal(true)
       }
     } catch (error) {
-      console.error("Error during sending OTP:", error);
-      setModalData({title:"Error during sending OTP", description:'Please check the credentials properly and check your internet connection', button:'Okay'})
+      console.error("Error during sending email:", error);
+      setModalData({title:"Error during sending email", description:'Please check the credentials properly and check your internet connection', button:'Okay'})
       setModal(true)
     }
     setShowLoginWithOtp(true);
