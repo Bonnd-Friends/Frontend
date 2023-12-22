@@ -25,6 +25,8 @@ const RegisterPage = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ email:email, password:password, username:username, confirmPassword:confirmPassword }),
+          withCredentials: true, 
+          credentials: 'include'
         });
 
         if (response.ok) {

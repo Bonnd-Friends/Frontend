@@ -19,6 +19,8 @@ const OtpVerification = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email:email }),
+        withCredentials: true, 
+        credentials: 'include'
       });
 
       if (response.ok) {

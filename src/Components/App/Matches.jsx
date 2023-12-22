@@ -27,6 +27,8 @@ const Matches = () => {
                     headers: {
                         "Content-Type": "application/json",
                     },
+                    withCredentials: true, 
+                   
                 });
 
                 if (response.ok) {
@@ -48,6 +50,8 @@ const Matches = () => {
                     headers: {
                         "Content-Type": "application/json",
                     },
+                    withCredentials: true, 
+                    
                 });
 
                 if (response.ok) {

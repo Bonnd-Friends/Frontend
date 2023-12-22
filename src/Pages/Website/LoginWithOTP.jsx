@@ -62,6 +62,8 @@ const LoginWithOTP = ({ email }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email:email, otp:numberOtp }),
+        withCredentials: true, 
+        credentials: 'include'
       });
 
       if (response.ok) {
@@ -95,6 +97,8 @@ const LoginWithOTP = ({ email }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email:email }),
+        withCredentials: true, 
+        credentials: 'include'
       });
 
       if (response.ok) {
