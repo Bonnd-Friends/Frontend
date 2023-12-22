@@ -83,7 +83,7 @@ const Explore = () => {
 
     return (
         <>
-        <div className='flex items-center flex-col h-[85vh] min-w-screen bg-black overflow-x-hidden overflow-y-hidden'>
+        <div className='flex items-center flex-col h-[85vh] min-w-screen pt-5 bg-black1 overflow-x-hidden overflow-y-hidden'>
 
             <TinderCard
                 onSwipe={onSwipe}
@@ -91,7 +91,7 @@ const Explore = () => {
                 preventSwipe={['up', 'down']}
                 ref={tinderCardRef}
             >
-                <div className='bg-orange-500 rounded-lg overflow-hidden p-1'>
+                <div className='bg-white-500 rounded-lg overflow-hidden p-1'>
 
                     <map name="workmap">
                         <area

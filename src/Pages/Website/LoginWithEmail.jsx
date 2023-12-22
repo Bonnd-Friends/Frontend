@@ -24,22 +24,28 @@ const LoginPage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email:email, password:password }),
+
+        credentials: 'include',
+
       });
 
       if (response.ok) {
         console.log("Login successful!");
         setModalData({title:"Login Successfully", description:`Welcome ${email} you are successfully login`, button:'Okay'})
         setModal(true)
+        navigateTo('/app')
       } else {
         // Handle login error
         console.error("Login failed");
         setModalData({title:"Login Failed", description:`Please check your credentials`, button:'Okay'})
         setModal(true)
+        navigateTo('/login')
       }
     } catch (error) {
       console.error("Error during login:", error);
       setModalData({title:"Error during login", description:'Please check the credentials properly and check your internet connection', button:'Okay'})
       setModal(true)
+      navigateTo('/login')
     }
   };
 

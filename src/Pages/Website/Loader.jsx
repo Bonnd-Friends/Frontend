@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../../assets/bonnd.png";
+import logo from "../../assets/bonnd_logo.png";
 
 const Loader = () => {
   return (
@@ -7,7 +7,7 @@ const Loader = () => {
       <img
         src={logo}
         alt="Logo"
-        className="h-[30px] w-[100px] animate-bounce"
+        className="h-[45px] w-[45px] animate-bounce"
       />
     </div>
   );

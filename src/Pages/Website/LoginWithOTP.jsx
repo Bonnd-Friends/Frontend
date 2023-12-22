@@ -2,6 +2,8 @@ import React, { useState, useRef } from "react";
 import AlertBox from "./AlertBox";
 
 const LoginWithOTP = ({ email }) => {
+  const navigateTo = useNavigate();
+
   const [otp, setOTP] = useState(["", "", "", ""]);
   const inputRefs = [useRef(), useRef(), useRef(), useRef()];
   const [modal, setModal] = useState(false);
@@ -60,27 +62,68 @@ const LoginWithOTP = ({ email }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email:email, otp:numberOtp }),
+
+        withCredentials: true, 
+        credentials: 'include'
+
       });
 
       if (response.ok) {
         console.log("Login successful!");
         setModalData({title:"Login Successfully", description:`Welcome ${email} you are successfully login`, button:'Okay'})
         setModal(true)
+
+        navigateTo('/app')
+
       } else {
         // Handle login error
         console.error("Login failed");
         setModalData({title:"Login Failed", description:`Please check your credentials`, button:'Okay'})
         setModal(true)
+
+        navigateTo('/login')
+
       }
     } catch (error) {
       console.error("Error during login:", error);
       setModalData({title:"Error during login", description:'Please check the credentials properly and check your internet connection', button:'Okay'})
       setModal(true)
+
+      navigateTo('/login')
+
     }
   };
 
-  const handleResendOtp = () => {
+  const handleResendOtp = async (e) => {
     console.log("Resending OTP...");
+    e.preventDefault();
+    console.log("Getting OTP for email:", email);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_ENVIRONMENT=="PRODUCTION"?'/api':import.meta.env.VITE_BACKEND_URL}/auth/generate-otp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email:email }),
+        withCredentials: true, 
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        console.log("OTP Sent successful!");
+        setModalData({title:"OTP Sent Successfully", description:`OTP sent to ${email} Please check your email`, button:'Okay'})
+        setModal(true)
+      } else {
+        // Handle login error
+        console.error("OTP Sent failed");
+        setModalData({title:"OTP Sent Failed", description:`Please check your credentials`, button:'Okay'})
+        setModal(true)
+      }
+    } catch (error) {
+      console.error("Error during sending OTP:", error);
+      setModalData({title:"Error during sending OTP", description:'Please check the credentials properly and check your internet connection', button:'Okay'})
+      setModal(true)
+    }
   };
 
   return (
