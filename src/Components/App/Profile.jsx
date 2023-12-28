@@ -25,7 +25,7 @@ const Profile = () => {
   const inputRef = useRef();
 
   const triggerFileSelectPopup = () => inputRef.current.click();
-
+  const [file, setFile] = useState(null)
   const [selectedImage, setSelectedImage] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -71,6 +71,7 @@ const Profile = () => {
 
   const onSelectFile = (event) => {
     if (event.target.files && event.target.files.length > 0) {
+      setFile(event.target.files[0])
       const reader = new FileReader();
       reader.readAsDataURL(event.target.files[0]);
       reader.addEventListener("load", () => {
@@ -79,36 +80,31 @@ const Profile = () => {
     }
   };
 
-  const handleUpload = async () => {
+  const handleFormUpload = async (e) => {
+    e.preventDefault();
+    if (!croppedImage) {
+      alert("Please select and crop an image before uploading.");
+      return;
+    }
     try {
-      if (!croppedImage) {
-        alert("Please select and crop an image before uploading.");
-        return;
-      }
+      const formDataWithFile = new FormData();
+      formDataWithFile.append("file", file);
+      formDataWithFile.append("croppedImage", JSON.stringify(croppedImage));
 
-      const imageData = new FormData();
-      imageData.append("image", croppedImage);
-      const response = await fetch(`http://localhost:3000/api/images/${userData.username}`, {
+      const response = await fetch(`${import.meta.env.VITE_IMAGE_BACKEND_URL}/api/images/${userData.username}`, {
         method: "POST",
-        body: JSON.stringify(imageData),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        body: formDataWithFile,
         withCredentials: true,
         credentials: "include",
       });
-  
-      if (response.ok) {
-        const data = await response.json();
-        setFormData({ ...formData, image_url: data.imageUrl });
-        alert("Image uploaded successfully!");
-      } else {
-        alert("Image upload failed. Please try again.");
-      }
+      const updatedData = await response.json();
+      setUserData(updatedData);
+      setEditMode(false);
     } catch (error) {
-      console.error("Error uploading image:", error);
+      console.error("Error updating user data:", error);
     }
   };
+
   
 
   const handleFormSubmit = async (e) => {
@@ -202,7 +198,7 @@ const Profile = () => {
           {croppedImage && (
             <div className="text-center mt-4">
               <button
-                onClick={handleUpload}
+                onClick={handleFormUpload}
                 className="mt-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
               >
                 Upload Cropped Image
