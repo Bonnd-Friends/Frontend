@@ -99,7 +99,14 @@ const Profile = () => {
       });
       const updatedData = await response.json();
       setUserData(updatedData);
-      setEditMode(false);
+      
+
+      if (response.ok) {
+        setFormData({ ...formData, image_url: [...formData.image_url, updatedData.imageUrl] });
+        console.log("Image uploaded successfully!");
+      } else {
+        alert("Image upload failed. Please try again.");
+      }
     } catch (error) {
       console.error("Error updating user data:", error);
     }
