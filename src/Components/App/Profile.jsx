@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import logo from "../../assets/download.jpeg";
-import { FaUpload } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { FaSignOutAlt, FaUpload } from "react-icons/fa";
 import Cropper from "react-easy-crop";
 import Slider from "react-slick";
 
@@ -19,14 +20,16 @@ import {
 } from "react-icons/fa";
 
 const Profile = () => {
+  const navigateTo = useNavigate();
   const [userData, setUserData] = useState({});
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({});
   const inputRef = useRef();
 
   const triggerFileSelectPopup = () => inputRef.current.click();
-  const [file, setFile] = useState(null)
+  const [file, setFile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [imageData, setImageData] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -43,12 +46,31 @@ const Profile = () => {
           }/profile`,
           {
             withCredentials: true,
-            credentials:"include"
+            credentials: "include",
           }
         );
         const data = await response.json();
         setUserData(data);
         setFormData(data); // Set form data initially
+
+        // console.log(userData.image_url[0])
+
+        await fetch(`${import.meta.env.VITE_IMAGE_BACKEND_URL}/image/${
+          userData.image_url[0]
+        }`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json, charset=UTF-8",
+            Accept: "application/json, image/png", 
+          },
+          withCredentials:true,
+          credentials: "include",
+        })
+        .then((response) => response.blob())
+        .then((blob) => {
+          const imageUrl = URL.createObjectURL(blob);
+          setImageData(imageUrl);
+        })
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -63,7 +85,7 @@ const Profile = () => {
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-};
+  };
 
   const onCropComplete = (croppedAreaPixels, croppedImage) => {
     setCroppedImage(croppedImage);
@@ -71,7 +93,7 @@ const Profile = () => {
 
   const onSelectFile = (event) => {
     if (event.target.files && event.target.files.length > 0) {
-      setFile(event.target.files[0])
+      setFile(event.target.files[0]);
       const reader = new FileReader();
       reader.readAsDataURL(event.target.files[0]);
       reader.addEventListener("load", () => {
@@ -91,19 +113,26 @@ const Profile = () => {
       formDataWithFile.append("file", file);
       formDataWithFile.append("croppedImage", JSON.stringify(croppedImage));
 
-      const response = await fetch(`${import.meta.env.VITE_IMAGE_BACKEND_URL}/api/images/${userData.username}`, {
-        method: "POST",
-        body: formDataWithFile,
-        withCredentials: true,
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_IMAGE_BACKEND_URL}/api/images/${
+          userData.username
+        }`,
+        {
+          method: "POST",
+          body: formDataWithFile,
+          withCredentials: true,
+          credentials: "include",
+        }
+      );
       const updatedData = await response.json();
       setUserData(updatedData);
-      
 
       if (response.ok) {
-        setFormData({ ...formData, image_url: [...formData.image_url, updatedData.imageUrl] });
-        console.log("Image uploaded successfully!");
+        setFormData({
+          ...formData,
+          image_url: [...formData.image_url, updatedData.imageUrl],
+        });
+        alert("Image uploaded Successfully!!");
       } else {
         alert("Image upload failed. Please try again.");
       }
@@ -112,11 +141,9 @@ const Profile = () => {
     }
   };
 
-  
-
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData)
+    console.log(formData);
     try {
       const response = await fetch(
         `${
@@ -131,12 +158,35 @@ const Profile = () => {
           },
           body: JSON.stringify(formData),
           withCredentials: true,
-          credentials: "include"
+          credentials: "include",
         }
       );
       const updatedData = await response.json();
       setUserData(updatedData);
       setEditMode(false);
+    } catch (error) {
+      console.error("Error updating user data:", error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_ENVIRONMENT === "PRODUCTION"
+            ? "/api"
+            : import.meta.env.VITE_BACKEND_URL
+        }/auth/logout`,
+        {
+          method: "GET",
+          withCredentials: true,
+          credentials: "include",
+        }
+      );
+      if (response.ok){
+        alert("Logged Out");
+        navigateTo("/");
+      }
     } catch (error) {
       console.error("Error updating user data:", error);
     }
@@ -150,6 +200,12 @@ const Profile = () => {
           className="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
         >
           <FaEdit />
+        </button>
+        <button
+          onClick={handleLogout}
+          className="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
+        >
+          <FaSignOutAlt />
         </button>
       </div>
 
@@ -323,8 +379,9 @@ const Profile = () => {
           <div className="flex items-center justify-center mb-4">
             <img
               className="h-[200px] w-[200px] object-cover rounded-full border-4 border-white shadow-lg"
-              src={userData.avatar || logo}
-              alt="User Avatar"
+              src={imageData || logo}
+              alt="Preview"
+              style={{ maxWidth: "100%", maxHeight: "100%" }}
             />
           </div>
           <div className="flex items-center justify-center p-2 mb-2 text-2xl rounded-[0.5rem] text-black6 inline-block">
