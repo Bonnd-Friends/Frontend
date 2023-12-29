@@ -17,9 +17,6 @@ const Navbar = () => {
             <FaSignInAlt className="inline-block text-lg mr-1" />
             Login
           </Link>
-          <Link to="/app" className="text-white hover:text-gray-300">
-            App
-          </Link>
         </div>
       </div>
     </nav>

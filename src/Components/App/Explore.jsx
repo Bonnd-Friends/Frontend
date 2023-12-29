@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState, useRef, useMemo } from 'react';
 import TinderCard from 'react-tinder-card';
 import image from '../../assets/download.jpeg';
 import flower from '../../assets/flower.jpg'
 import leaf from '../../assets/leaf.jpg'
 
-// const imageData = [{ id: "1", imageLink: flower }, { id: "2", imageLink: leaf },{ id: "3", imageLink: flower }]
-const cardData = [{id:"1", imageData:[{ id: "1", imageLink: flower }, { id: "2", imageLink: leaf },{ id: "3", imageLink: flower }], name:"Hello World", age:'25'},{id:"2", imageData:[{ id: "1", imageLink: flower }, { id: "2", imageLink: leaf },{ id: "3", imageLink: flower }], name:"Hello", age:'20'},{id:"3", imageData:[{ id: "1", imageLink: flower }, { id: "2", imageLink: leaf },{ id: "3", imageLink: flower }], name:"World", age:'15'}]
+// const image_url = [{ id: "1", imageLink: flower }, { id: "2", imageLink: leaf },{ id: "3", imageLink: flower }]
+// const cardData = [{id:"1", image_url:[{ id: "1", imageLink: flower }, { id: "2", imageLink: leaf },{ id: "3", imageLink: flower }], name:"Hello World", age:'25'},{id:"2", image_url:[{ id: "1", imageLink: flower }, { id: "2", imageLink: leaf },{ id: "3", imageLink: flower }], name:"Hello", age:'20'},{id:"3", image_url:[{ id: "1", imageLink: flower }, { id: "2", imageLink: leaf },{ id: "3", imageLink: flower }], name:"World", age:'15'}]
 // TODO
 // Use Fetch API from backend
 // Create a stack of tinder cards 
-// Parameters for this component would be {profile, imageData}
+// Parameters for this component would be {profile, image_url}
 // Try to make the tinderCard a different component
 
 
@@ -18,17 +18,48 @@ const Explore = () => {
 
     const [currentIndexArea, setCurrentIndexArea] = useState(0);
     const touchTracker = useRef({x:0, y:0})
+    const [cardData, setCardData] = useState([])
 
     const [currentIndex, setCurrentIndex] = useState(cardData.length - 1)
     const currentIndexRef = useRef(currentIndex)
+    console.log(currentIndexRef.current)
 
-    const childRefs = useMemo(
-        () =>
-            Array(cardData.length)
+    useEffect(()=>{
+        const fetchCardData = async () => {
+            try {
+              const response = await fetch(
+                `${
+                  import.meta.env.VITE_ENVIRONMENT === "PRODUCTION"
+                    ? "/api"
+                    : import.meta.env.VITE_BACKEND_URL
+                }/feed`,
+                {
+                  withCredentials: true,
+                  credentials:"include"
+                }
+              );
+              const data = await response.json();
+              console.log(data)
+              setCardData(data)
+              setCurrentIndex(data.length - 1)
+              currentIndexRef.current = data.length-1
+            } catch (error) {
+              console.error("Error fetching user data:", error);
+            }
+          };
+      
+          fetchCardData();
+    }, [])
+
+
+    const childRefs = useMemo(() => {
+        if (cardData.length) {
+            return Array(cardData.length)
                 .fill(0)
-                .map((i) => React.createRef()),
-        []
-    )
+                .map(() => React.createRef());
+        }
+        return [];
+    }, [cardData.length]);
 
     const updateCurrentIndex = (val) => {
         setCurrentIndex(val)
@@ -54,6 +85,7 @@ const Explore = () => {
     }
 
     const swipe = async (dir) => {
+        
         if (canSwipe && currentIndex < cardData.length) {
             await childRefs[currentIndex].current.swipe(dir) // Swipe the card!
         }
@@ -98,25 +130,25 @@ const Explore = () => {
 
     return (
         <>
-            <div className='flex items-center flex-col h-[85vh] min-w-screen pt-5 bg-black1 overflow-x-hidden overflow-y-hidden'>
+            <div className='flex items-center flex-col h-[85vh] min-w-screen pt-5 bg-black1 overflow-x-hidden overflow-y-hidden' >
                 
                     {cardData.map((card, index) => (
                         <TinderCard
                             ref={childRefs[index]}
                             className='absolute'
-                            key={card.name}
-                            onSwipe={(dir) => swiped(dir, card.name, index)}
-                            onCardLeftScreen={() => outOfFrame(card.name, index)}
+                            key={card.username}
+                            onSwipe={(dir) => swiped(dir, card.username, index)}
+                            onCardLeftScreen={() => outOfFrame(card.username, index)}
                         >
-                            <div className='bg-white-500 rounded-lg overflow-hidden p-1'>
+                            <div className='bg-white-500 rounded-lg overflow-x-hidden overflow-y-hidden p-1'>
 
                                 <map name="workmap">
                                 <area
                                     shape="rect"
                                     coords="0,0,175,616"
                                     alt="LEFT_AREA"
-                                    onClick={(e) => handleAreaClick(e, 'LEFT_AREA', card.imageData.length)}
-                                    onTouchStart={(e) => handleAreaClick(e, 'LEFT_AREA', card.imageData.length)}
+                                    //onClick={(e) => handleAreaClick(e, 'LEFT_AREA', card.image_url.length)}
+                                    onTouchStart={(e) => handleAreaClick(e, 'LEFT_AREA', card.image_url.length-1)}
                                     // onTouchMove={()=>handleTouchMove('right')}
                                     onTouchEnd={handleTouchEnd}
                                 />
@@ -124,15 +156,15 @@ const Explore = () => {
                                     shape="rect"
                                     coords="175,0,350,616"
                                     alt="RIGHT_AREA"
-                                    onClick={(e) => handleAreaClick(e, 'RIGHT_AREA', card.imageData.length)}
-                                    onTouchStart={(e) => handleAreaClick(e, 'RIGHT_AREA', card.imageData.length)}
+                                    //onClick={(e) => handleAreaClick(e, 'RIGHT_AREA', card.image_url.length)}
+                                    onTouchStart={(e) => handleAreaClick(e, 'RIGHT_AREA', card.image_url.length-1)}
                                     // onTouchMove={()=>handleTouchMove('left')}
                                     onTouchEnd={handleTouchEnd}
                                 />
                             </map>
                                 <img
-                                    src={card.imageData[currentIndexArea].imageLink}
-                                    alt={`Image ${card.imageData[currentIndexArea].id}`}
+                                    src={`${import.meta.env.VITE_IMAGE_BACKEND_URL}/image/${card.image_url[currentIndexArea]}`}
+                                    alt={`Image ${card.image_url[currentIndexArea]}`}
                                     draggable="false"
                                     height={616}
                                     width={350}
