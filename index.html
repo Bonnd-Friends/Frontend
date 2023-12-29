@@ -8,24 +8,24 @@
   <title>RCOEM Friends</title>
   <link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials">
   <script>
-    // const registerServiceWorker = async () => {
-    //   if ('serviceWorker' in navigator) {
-    //     const swRegistration = await navigator.serviceWorker.register('sw.js'); //notice the file name
-    //     return swRegistration;
-    //   }
-    // }
-
-
-    // registerServiceWorker()
-    navigator.serviceWorker.getRegistrations().then(function (registrations) {
-      for (let registration of registrations) {
-        registration.unregister();
+    const registerServiceWorker = async () => {
+      if ('serviceWorker' in navigator) {
+        const swRegistration = await navigator.serviceWorker.register('sw.js'); //notice the file name
+        return swRegistration;
       }
-    });
+    }
+
+
+    registerServiceWorker()
+    // navigator.serviceWorker.getRegistrations().then(function (registrations) {
+    //   for (let registration of registrations) {
+    //     registration.unregister();
+    //   }
+    // });
   </script>
 </head>
 
-<body>
+<body style="background-color:black1;">
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
 </body>

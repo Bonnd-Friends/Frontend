@@ -19,6 +19,7 @@ const OtpVerification = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email:email }),
+
         withCredentials: true, 
         credentials: 'include'
       });
@@ -36,6 +37,7 @@ const OtpVerification = () => {
     } catch (error) {
       console.error("Error during sending OTP:", error);
       setModalData({title:"Error during sending OTP", description:'Please check the credentials properly and check your internet connection', button:'Okay'})
+
       setModal(true)
     }
     setShowLoginWithOtp(true);
