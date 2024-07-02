@@ -50,27 +50,28 @@ const Profile = () => {
           }
         );
         const data = await response.json();
-        setUserData(data);
-        setFormData(data); // Set form data initially
-
-        // console.log(userData.image_url[0])
-
-        await fetch(`${import.meta.env.VITE_IMAGE_BACKEND_URL}/image/${
-          userData.image_url[0]
-        }`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json, charset=UTF-8",
-            Accept: "application/json, image/png", 
-          },
-          withCredentials:true,
-          credentials: "include",
-        })
-        .then((response) => response.blob())
-        .then((blob) => {
-          const imageUrl = URL.createObjectURL(blob);
-          setImageData(imageUrl);
-        })
+        console.log("Data: ",data)
+        setUserData(data)
+        setFormData(data);
+        console.log(data.image_url[0])
+        if(data.image_url){
+          await fetch(`${import.meta.env.VITE_IMAGE_BACKEND_URL}/image/${
+            data.image_url[0].imageUrl
+          }`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json, charset=UTF-8",
+              Accept: "application/json, image/png", 
+            },
+            withCredentials:true,
+            credentials: "include",
+          })
+          .then((response) => response.blob())
+          .then((blob) => {
+            const imageUrl = URL.createObjectURL(blob);
+            setImageData(imageUrl);
+          })
+        }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -78,6 +79,10 @@ const Profile = () => {
 
     fetchUserData();
   }, [editMode]);
+
+  useEffect(() => {
+    console.log("Updated Form Data: ", formData);
+  }, [formData]);
 
   const handleEditClick = () => {
     setEditMode(!editMode);
@@ -125,12 +130,14 @@ const Profile = () => {
         }
       );
       const updatedData = await response.json();
+      console.log("Image Data: ", updatedData)
       setUserData(updatedData);
 
       if (response.ok) {
         setFormData({
           ...formData,
-          image_url: [...formData.image_url, updatedData.imageUrl],
+          image_url: Array.isArray(formData.image_url) ? [...formData.image_url, updatedData.imageUrl] : [updatedData.imageUrl],
+          imageId: formData.imageId ? formData.imageId : updatedData.imageId,
         });
         alert("Image uploaded Successfully!!");
       } else {
@@ -244,7 +251,7 @@ const Profile = () => {
                 <span className="text-gray-500">
                   <img
                     className="h-[200px] w-[200px] object-cover bg-black opacity-50 rounded-full border-4 border-white"
-                    src={selectedImage || logo}
+                    src={selectedImage}
                     alt="User Avatar"
                   />
                 </span>
@@ -379,7 +386,7 @@ const Profile = () => {
           <div className="flex items-center justify-center mb-4">
             <img
               className="h-[200px] w-[200px] object-cover rounded-full border-4 border-white shadow-lg"
-              src={imageData || logo}
+              src={imageData}
               alt="Preview"
               style={{ maxWidth: "100%", maxHeight: "100%" }}
             />
